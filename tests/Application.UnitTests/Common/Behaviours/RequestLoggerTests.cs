@@ -3,25 +3,25 @@ using CA.XUnit.Application.Common.Interfaces;
 using CA.XUnit.Application.TodoItems.Commands.CreateTodoItem;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
-namespace CA.XUnit.Application.UnitTests.Common.Behaviours;
+namespace CA.XUnit.Application.UnitFacts.Common.Behaviours;
 
-public class RequestLoggerTests
+public class RequestLoggerFacts
 {
-    private Mock<ILogger<CreateTodoItemCommand>> _logger = null!;
-    private Mock<ICurrentUserService> _currentUserService = null!;
-    private Mock<IIdentityService> _identityService = null!;
+    private readonly Mock<ILogger<CreateTodoItemCommand>> _logger = null!;
+    private readonly Mock<ICurrentUserService> _currentUserService = null!;
+    private readonly Mock<IIdentityService> _identityService = null!;
 
-    [SetUp]
-    public void Setup()
+    //[SetUp]
+    public RequestLoggerFacts()
     {
         _logger = new Mock<ILogger<CreateTodoItemCommand>>();
         _currentUserService = new Mock<ICurrentUserService>();
         _identityService = new Mock<IIdentityService>();
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldCallGetUserNameAsyncOnceIfAuthenticated()
     {
         _currentUserService.Setup(x => x.UserId).Returns(Guid.NewGuid().ToString());
@@ -33,7 +33,7 @@ public class RequestLoggerTests
         _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>()), Times.Once);
     }
 
-    [Test]
+    [Fact]
     public async Task ShouldNotCallGetUserNameAsyncOnceIfUnauthenticated()
     {
         var requestLogger = new LoggingBehaviour<CreateTodoItemCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);

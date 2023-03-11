@@ -4,16 +4,16 @@ using CA.XUnit.Application.Common.Mappings;
 using CA.XUnit.Application.Common.Models;
 using CA.XUnit.Application.TodoLists.Queries.GetTodos;
 using CA.XUnit.Domain.Entities;
-using NUnit.Framework;
+using Xunit;
 
-namespace CA.XUnit.Application.UnitTests.Common.Mappings;
+namespace CA.XUnit.Application.UnitFacts.Common.Mappings;
 
-public class MappingTests
+public class MappingFacts
 {
     private readonly IConfigurationProvider _configuration;
     private readonly IMapper _mapper;
 
-    public MappingTests()
+    public MappingFacts()
     {
         _configuration = new MapperConfiguration(config => 
             config.AddProfile<MappingProfile>());
@@ -21,17 +21,17 @@ public class MappingTests
         _mapper = _configuration.CreateMapper();
     }
 
-    [Test]
+    [Fact]
     public void ShouldHaveValidConfiguration()
     {
         _configuration.AssertConfigurationIsValid();
     }
 
-    [Test]
-    [TestCase(typeof(TodoList), typeof(TodoListDto))]
-    [TestCase(typeof(TodoItem), typeof(TodoItemDto))]
-    [TestCase(typeof(TodoList), typeof(LookupDto))]
-    [TestCase(typeof(TodoItem), typeof(LookupDto))]
+    [Theory]
+    [InlineData(typeof(TodoList), typeof(TodoListDto))]
+    [InlineData(typeof(TodoItem), typeof(TodoItemDto))]
+    [InlineData(typeof(TodoList), typeof(LookupDto))]
+    [InlineData(typeof(TodoItem), typeof(LookupDto))]
     public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
     {
         var instance = GetInstanceOf(source);
